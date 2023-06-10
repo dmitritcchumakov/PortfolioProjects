@@ -2,6 +2,7 @@
 SELECT *
 FROM PortfolioProject..CovidDeaths
 WHERE continent is not null;
+
 --SELECT Data that i am going to use
 
 SELECT location, date, total_cases, new_cases, total_deaths, population
@@ -11,6 +12,7 @@ ORDER BY 1,2
 
 --Looking at Total Cases vs Total Deaths
 --Shows the likelihood of death if you get covid in your country
+
 SELECT location, date, total_cases, total_deaths, (cast(total_deaths as float)/cast(total_cases as float))*100 AS DeathPercentage
 FROM PortfolioProject..CovidDeaths
 --WHERE location = 'United States' and
@@ -19,6 +21,7 @@ ORDER BY 1,2
 
 --Looking at the Total Cases vs Population
 --Shows what percentage of population got Covid
+
 SELECT location, date, population, total_cases, (cast(total_cases as float)/cast(population as float))*100 AS PercentPopulationInfected
 FROM PortfolioProject..CovidDeaths
 --WHERE location = 'Estonia' and
@@ -45,7 +48,7 @@ ORDER BY TotalDeathCount desc
 
 
 --Breaking previous data by continent and income
----- Showing continents with the highest death count
+--Showing continents with the highest death count
 
 SELECT location, MAX(cast (total_deaths as float)) as TotalDeathCount
 FROM PortfolioProject..CovidDeaths
@@ -74,9 +77,11 @@ ORDER BY 1,2
 
 
 -- Looking at Total Population vs Vaccinations
+
 SELECT dea.continent, dea.location, dea.date, dea.population, vac.new_vaccinations
 , SUM(cast(vac.new_vaccinations as float)) OVER (Partition by dea.Location Order by dea.location, dea.date) as RollingPeopleVaccinated
 --, (RollingPeopleVaccinated/population)*100 I need to use CTE or TempTable in order to do that
+
 FROM PortfolioProject..CovidDeaths dea
 JOIN PortfolioProject..CovidVaccinations vac
 	ON dea.location = vac.location
@@ -103,6 +108,7 @@ Select *, (RollingPeopleVaccinated/population)*100
 From PopvsVac
 
 --TEMP TABLE use case
+
 DROP TABLE if exists #PercentPopulationVaccinated
 --So there can be done alteration without an errors
 Create Table #PercentPopulationVaccinated
